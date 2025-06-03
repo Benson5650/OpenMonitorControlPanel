@@ -289,7 +289,17 @@ controlPanel.protocol("WM_DELETE_WINDOW", withdraw_window)
 
 #掃描螢幕
 def scanMonitor():
+    # 確保 Log 目錄存在
+    if not os.path.exists('Log'):
+        os.makedirs('Log')
+    
     subprocess.call("API\ControlMyMonitor.exe /smonitors Log\smonitors.txt", creationflags=CREATE_NO_WINDOW)
+    
+    # 檢查檔案是否存在，如果不存在則再次嘗試創建
+    if not os.path.exists('Log\smonitors.txt'):
+        messagebox.showerror("錯誤", "無法生成螢幕清單檔案，請檢查 API 工具是否正常運作")
+        return
+    
     file = open('Log\smonitors.txt', 'r',encoding="utf-16 le")
 
     MonitorList = file.readlines()
